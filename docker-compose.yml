@@ -1,0 +1,90 @@
+version: '3'
+
+networks:
+  dinoparks:
+
+services:
+  # NGINX Web Server
+  dino-web-server:
+    build:
+      context: .
+      dockerfile: ./docker-compose/nginx/nginx.dockerfile
+    container_name: dino-web-server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - dino-app
+      - dino-db
+    networks:
+      - dinoparks
+
+  # Database service
+  dino-db:
+    image: mysql:5.7.29
+    container_name: dino-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: dinopark
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin_dinopark
+      MYSQL_ROOT_PASSWORD: admin_dinopark
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - dinoparks
+
+  # Laravel app
+  dino-app:
+    build:
+      context: .
+      dockerfile: ./docker-compose/php/php.dockerfile
+    container_name: dino-app
+    volumes:
+      - ./src:/var/www/html:delegated
+    ports:
+      - "9000:9000"
+    networks:
+      - dinoparks
+
+  dino-composer:
+    build:
+      context: .
+      dockerfile: ./docker-compose/composer/composer.dockerfile
+    container_name: dino-composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - dino-app
+    user: laravel
+    networks:
+      - dinoparks
+    entrypoint: ['composer', '--ignore-platform-reqs']
+
+  dino-npm:
+    image: node:13.7
+    container_name: dino-npm
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: ['npm']
+
+  dino-artisan:
+    build:
+      context: .
+      dockerfile: ./docker-compose/php/php.dockerfile
+    container_name: dino-artisan
+    volumes:
+      - ./src:/var/www/html:delegated
+    depends_on:
+      - dino-db
+    working_dir: /var/www/html
+    user: laravel
+    entrypoint: ['php', '/var/www/html/artisan']
+    networks:
+      - dinoparks
