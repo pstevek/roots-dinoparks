@@ -5,25 +5,25 @@ networks:
 
 services:
   # NGINX Web Server
-  dino-web-server:
+  nginx:
     build:
       context: .
       dockerfile: ./docker-compose/nginx/nginx.dockerfile
-    container_name: dino-web-server
+    container_name: nginx
     ports:
       - "8080:80"
     volumes:
       - ./src:/var/www/html:delegated
     depends_on:
-      - dino-app
-      - dino-db
+      - php
+      - mysql
     networks:
       - dinoparks
 
   # Database service
-  dino-db:
+  mysql:
     image: mysql:5.7.29
-    container_name: dino-db
+    container_name: mysql
     restart: unless-stopped
     tty: true
     ports:
@@ -39,11 +39,11 @@ services:
       - dinoparks
 
   # Laravel app
-  dino-app:
+  php:
     build:
       context: .
       dockerfile: ./docker-compose/php/php.dockerfile
-    container_name: dino-app
+    container_name: php
     volumes:
       - ./src:/var/www/html:delegated
     ports:
@@ -51,38 +51,40 @@ services:
     networks:
       - dinoparks
 
-  dino-composer:
+  composer:
     build:
       context: .
       dockerfile: ./docker-compose/composer/composer.dockerfile
-    container_name: dino-composer
+    container_name: composer
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
     depends_on:
-      - dino-app
+      - php
     user: laravel
+    entrypoint: ['composer', '--ignore-platform-reqs']
     networks:
       - dinoparks
-    entrypoint: ['composer', '--ignore-platform-reqs']
 
-  dino-npm:
+  npm:
     image: node:13.7
-    container_name: dino-npm
+    container_name: npm
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
     entrypoint: ['npm']
+    networks:
+      - dinoparks
 
-  dino-artisan:
+  artisan:
     build:
       context: .
       dockerfile: ./docker-compose/php/php.dockerfile
-    container_name: dino-artisan
+    container_name: artisan
     volumes:
       - ./src:/var/www/html:delegated
     depends_on:
-      - dino-db
+      - mysql
     working_dir: /var/www/html
     user: laravel
     entrypoint: ['php', '/var/www/html/artisan']
