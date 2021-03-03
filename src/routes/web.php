@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('dino')->group(function () {
+    Route::get('/', [MainController::class, 'index']);
+    Route::get('/feed', [MainController::class, 'getFeed']);
 });
