@@ -14,9 +14,4 @@ This assessment was completed using the Laravel Framework. (see official documen
 Once you clone the repo, please run the following commands:
 - `docker-compose up -d`
 - `cd src && composer install`
-- `cp .env.example .env`
-- `cd ..`
-- `docker-compose run --rm npm install`
-- `docker-compose run --rm npm run dev`
-- `docker-compose run --rm artisan migrate`
-- Run the app on ``localhost:8080``
+- Run the app on ``localhost:8080/dino``
