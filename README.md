@@ -7,12 +7,15 @@ This assessment was completed using the Laravel Framework. (see official documen
 ### Dependencies 
 
 - Docker
-- Docker Compose  
+- Docker Compose
+- Composer (See instructions <a href="https://getcomposer.org/download/" target="_blank">here</a>))
 
 ### 
 Once you clone the repo, please run the following commands:
 - `docker-compose up -d`
-- `docker-compose run --rm composer install`
+- `cd src && composer install`
+- `cp .env.example .env`
+- `cd ..`
 - `docker-compose run --rm npm install`
 - `docker-compose run --rm npm run dev`
 - `docker-compose run --rm artisan migrate`
