@@ -2,3 +2,12 @@
 @import 'variables';
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+body{
+  line-height: 1 !important;
+}
+
+.dinoBackground {
+  background-color: $dino;
+  width: 3px;
+}

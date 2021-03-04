@@ -1842,6 +1842,27 @@ module.exports = {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+function fetchData() {
+  fetch("http://localhost:8080/api/dino/locations").then(function (response) {
+    console.log(response);
+    if (!response.ok) throw Error("Error");
+    return response.json();
+  }).then(function (data) {
+    data.forEach(function (element) {
+      var col = document.getElementById(element.location);
+
+      if (element.is_safe) {
+        col.classList.add('dinoBackground');
+        col.innerHTML = "<img src='/storage/dino-parks-wrench.png' height='12px'>";
+      }
+    });
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+fetchData();
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

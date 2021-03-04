@@ -6,7 +6,6 @@ use App\Services\DinoService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MainController extends Controller
@@ -31,14 +30,11 @@ class MainController extends Controller
      */
     public function index()
     {
-
         return view('index');
     }
 
-    public function getFeed()
+    public function getLocationData()
     {
-        $data = $this->service->proceessFeed();
-
-        dd($data);
+        return $this->service->processFeed();
     }
 }

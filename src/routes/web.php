@@ -18,7 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('dino')->group(function () {
-    Route::get('/', [MainController::class, 'index']);
-    Route::get('/feed', [MainController::class, 'getFeed']);
-});
+Route::get('dino', [MainController::class, 'index']);
